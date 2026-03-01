@@ -6,8 +6,21 @@ with GitHub Copilot SDK's production agent runtime.
 """
 
 import asyncio
+import shutil
 from pydantic import BaseModel, Field
-from pydantic_ai_bridge import CopilotPydanticAgent, CopilotAgentConfig
+from copilot_bridge import CopilotPydanticAgent, CopilotAgentConfig
+
+
+# Helper to find copilot CLI
+def get_copilot_cli_path():
+    """Find the copilot CLI binary path."""
+    cli_path = shutil.which("copilot")
+    if not cli_path:
+        raise RuntimeError("Copilot CLI not found in PATH. Please install it first.")
+    return cli_path
+
+
+CLI_PATH = get_copilot_cli_path()
 
 
 # Example 1: Simple Structured Output
@@ -27,6 +40,7 @@ async def example_weather():
         result_type=WeatherResponse,
         system_prompt="You are a weather assistant. Provide realistic weather data.",
         config=CopilotAgentConfig(
+            cli_path=CLI_PATH,
             model="gpt-4",
             timeout=60.0,
         )
@@ -66,6 +80,7 @@ def process_user_input(data):
         result_type=CodeAnalysis,
         system_prompt="You are a code security expert. Analyze code for issues.",
         config=CopilotAgentConfig(
+            cli_path=CLI_PATH,
             model="gpt-4",
             # Enable file system tools if analyzing real files
             available_tools=["read_file", "list_directory"],
@@ -108,7 +123,10 @@ async def example_conversation():
     agent = CopilotPydanticAgent(
         result_type=TaskPlan,
         system_prompt="You are a project planning assistant.",
-        config=CopilotAgentConfig(model="gpt-4")
+        config=CopilotAgentConfig(
+            cli_path=CLI_PATH,
+            model="gpt-4"
+        )
     )
 
     async with agent:
@@ -151,6 +169,7 @@ async def example_streaming():
         result_type=ResearchSummary,
         system_prompt="You are a research assistant.",
         config=CopilotAgentConfig(
+            cli_path=CLI_PATH,
             model="gpt-4",
             # Enable web search if available
             available_tools=["web_search", "read_url"],
@@ -194,6 +213,7 @@ async def example_byok():
         result_type=WeatherResponse,
         system_prompt="You are a weather assistant.",
         config=CopilotAgentConfig(
+            cli_path=CLI_PATH,
             model="gpt-4",
             provider={
                 "type": "openai",
@@ -226,6 +246,7 @@ async def example_file_operations():
         result_type=FileAnalysis,
         system_prompt="You are a file system analyst.",
         config=CopilotAgentConfig(
+            cli_path=CLI_PATH,
             model="gpt-4",
             working_directory=".",  # Current directory
             available_tools=["list_directory", "read_file", "file_stats"],
