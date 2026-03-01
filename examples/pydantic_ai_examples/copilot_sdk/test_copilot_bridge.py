@@ -4,10 +4,8 @@ Quick test of the Copilot SDK bridge with PydanticAI
 
 import asyncio
 from pydantic import BaseModel, Field
-import sys
-sys.path.insert(0, 'examples')
 
-from pydantic_ai_examples.copilot_sdk.copilot_bridge import (
+from copilot_bridge import (
     CopilotPydanticAgent,
     CopilotAgentConfig,
 )
