@@ -61,7 +61,7 @@ dependencies = [
     "opentelemetry-api>=1.28.0",
     "typing-inspection>=0.4.0",
     "genai-prices>=0.0.30",
-    "litellm @ git+https://github.com/fenghaitao/litellm.git",
+    "litellm @ git+https://github.com/haoli-3010/litellm.git",
 ]
 
 [tool.hatch.metadata.hooks.uv-dynamic-versioning.optional-dependencies]
